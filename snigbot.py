@@ -48,5 +48,33 @@ async def on_reaction_add(payload):
 					return
 				snigged_messages[message.name] = True
 
+def has_role(user, role):
+    for item in user.roles:
+        if item.name = role:
+            return True
+    return False
+
+class Commands(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    async def board(self, ctx, snigboard_channel):
+        """Sets which channel to post snigboard content to. Pass 'disable' as the channel name to disable this feature."""
+        if has_role(ctx.message.author, 'Moderator'):
+            if snigboard_channel == 'disable':
+                snigboard_setting = None
+                save(snigboard_setting)
+                await ctx.send('Snigboard disabled.')
+            for channel in ctx.guild.channels:
+                if channel.name == snigboard_channel:
+                    snigboard_setting = channel
+                    save(snigboard_setting)
+                    await ctx.send('Snigboard channel updated.')
+                    return
+            await ctx.send('Unrecognized channel.')
+        else:
+            await ctx.send('Missing permissions.')
+
 if __name__ == '__main__':
-	bot.run('token')
+    bot.add_cog(Commands(bot))
+    bot.run('token')
